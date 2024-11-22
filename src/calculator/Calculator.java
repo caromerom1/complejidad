@@ -1,10 +1,20 @@
 package calculator;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class Calculator {
+
+  private record GradeThreshold(double threshold, String message) {
+  }
+
+  private static final List<GradeThreshold> GRADES = List.of(
+      new GradeThreshold(4.5, "Aprobado, excelente"),
+      new GradeThreshold(4.0, "Aprobado, bueno"),
+      new GradeThreshold(3.5, "Aprobado, satisfactorio"),
+      new GradeThreshold(3.0, "Aprobado, suficiente"));
 
   public String getAverage(ArrayList<Course> courses) {
     int sum = 0;
@@ -15,34 +25,19 @@ public class Calculator {
       credits += course.getCredits();
     }
 
-    System.out.println("Suma: " + sum);
-    System.out.println("Creditos: " + credits);
-
     double average = sum / credits;
-
-    System.out.println("Promedio: " + average);
 
     if (average == 1.5) {
       return "No aprobado, nota minima";
     }
 
-    if (average < 3) {
-      return "No aprobado, insuficiente";
+    for (GradeThreshold grade : GRADES) {
+      if (average >= grade.threshold) {
+        return grade.message;
+      }
     }
 
-    if (average < 3.5) {
-      return "Aprobado, suficiente";
-    }
-
-    if (average < 4) {
-      return "Aprobado, satisfactorio";
-    }
-
-    if (average < 4.5) {
-      return "Aprobado, bueno";
-    }
-
-    return "Aprobado, excelente";
+    return "No aprobado, insuficiente";
   }
 
   public static void main(String[] args) {
